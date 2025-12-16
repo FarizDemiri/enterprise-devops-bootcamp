@@ -108,6 +108,18 @@ This is where everything clicked for me:
 
 ---
 
+## Part 6.5: The Smart Factory (Phase 6d)
+
+**The Concept**: Single Track vs. Multibranch.
+
+1. **The Upgrade**: I fired the "Doorman" (static job) and hired a "Floor Manager" (Multibranch Pipeline).
+2. **The Logic**: The Manager scans the building (Git) every minute.
+    - If it finds a **Feature Branch**, it builds it in a sandbox (Test, but don't Push).
+    - If it finds the **Main Branch**, it runs the full production line (Test + Push to Nexus).
+3. **The Result**: I can now experiment safely on side branches without polluting my production warehouse.
+
+---
+
 ## 🎯 The Big Picture
 
 Here's what I now understand about DevOps:

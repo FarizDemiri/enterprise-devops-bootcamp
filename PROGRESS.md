@@ -106,9 +106,9 @@
 
 #### Phase 6d: Multibranch Pipeline
 
-- [ ] 6d.1 Converted to Multibranch Pipeline
-- [ ] 6d.2 Configured branch discovery
-- [ ] 6d.3 Feature branch behavior working
+- [x] 6d.1 Converted to Multibranch Pipeline
+- [x] 6d.2 Configured branch discovery
+- [x] 6d.3 Feature branch behavior working
 
 #### Phase 6e: Shared Library
 
