@@ -9,10 +9,10 @@
 
 | Field | Value |
 |-------|-------|
-| **Milestone** | 4 - Cloud Basics + Deploy |
-| **Phase** | Cloud Infrastructure |
-| **Step Number** | 4.1.0 |
-| **Overall Completion** | 30% |
+| **Milestone** | 6 - Jenkins CI/CD Pipeline |
+| **Phase** | CI/CD |
+| **Step Number** | 6.1.0 |
+| **Overall Completion** | 45% |
 | **Blockers** | None |
 
 ---
@@ -60,14 +60,11 @@
 - [x] 4.4 Installed Docker on server
 - [x] 4.5 Deployed app manually via SSH
 
-### Milestone 5: Nexus Artifact Repository
+### Milestone 5: Artifact Repository with Nexus
 
-- [ ] 5.1 Deployed Nexus as Docker container
-- [ ] 5.2 Created Maven hosted repo
-- [ ] 5.3 Created Docker hosted repo
-- [ ] 5.4 Configured Maven to publish to Nexus
-- [ ] 5.5 Pushed JAR to Nexus
-- [ ] 5.6 Pushed Docker image to Nexus
+- [x] 5.1 Deployed Nexus locally via Docker
+- [x] 5.2 Configured Maven & Docker Hosted Repositories
+- [x] 5.3 Published JAR and Docker Image to Nexus
 
 ### Milestone 6: Jenkins CI/CD Pipeline
 

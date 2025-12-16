@@ -48,6 +48,18 @@ This document captures the "Essence" of our journey. It strips away the jargon t
 
 ---
 
+## Part 5: The Warehouse (Milestone 5)
+
+**The Concept**: Centralized Storage.
+
+1. **The Warehouse (Nexus)**: We spun up a dedicated server to store our work. This ensures that even if our laptop breaks, the "Company Assets" are safe.
+    * **The Maven Shelf**: Stores the "Raw Ingredient" (JAR file).
+    * **The Docker Shelf**: Stores the "Finished Meal" (Docker Image).
+2. **The Shipping Label**: We learned that a package must be properly labeled (Tagged) with the warehouse address (`localhost:8082`) or the guard won't accept it.
+3. **The Security**: We issued ID cards (`settings.xml` and `docker login`) so that only authorized employees can stock the shelves.
+
+---
+
 ## 🚀 Summary
 
 You have proven that your "Box" (Container) works just as well in the Cloud (Ubuntu) as it does on your Laptop (Windows). This is the power of Docker: **Write Once, Run Anywhere.**
