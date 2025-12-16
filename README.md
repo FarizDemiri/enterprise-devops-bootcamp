@@ -1,19 +1,38 @@
 # 🚀 Enterprise DevOps Reference Implementation
 
-> **Professional Portfolio Showcase**
-> *Developed by [Fariz Demiroski]*
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/FarizDemiri/enterprise-devops-bootcamp)
+[![Progress](https://img.shields.io/badge/progress-45%25-yellow)](PROGRESS.md)
+
+> **A Production-Grade CI/CD Pipeline Built from First Principles**  
+> *Not a tutorial copy-paste — every decision is deliberate and documented.*
 
 ---
 
-## 📖 Project Overview
+## 🎯 What This Project Demonstrates
 
-This repository demonstrates a **Production-Grade CI/CD Pipeline** built from first principles. Unlike simple "Hello World" tutorials, this project simulates a real-world enterprise environment where software is built, tested, securely stored, and deployed using industry-standard tooling.
+This isn't a "Hello World" deployment. This repository simulates a **real enterprise environment** where:
 
-The goal is not just to run tools, but to understand the **"Why"** behind every architectural decision—from the choice of **Jenkins** for orchestration to **Nexus** for artifact governance.
+- Code is **built and tested** automatically on every commit
+- Artifacts are **versioned and stored** in a governed repository
+- Deployments are **reproducible and auditable**
+- Infrastructure is **code, not clicks**
+
+**The goal**: Understand the *"Why"* behind every tool, not just the *"How"*.
+
+---
+
+## 📚 Documentation
+
+| Document | Description |
+|----------|-------------|
+| 📖 [**The DevOps Story**](docs/DEVOPS-STORY.md) | Plain-language explanation of every concept (no jargon) |
+| 📊 [**Progress Tracker**](PROGRESS.md) | Current status, completion checklist, and technical debt |
+
+---
 
 ## 🏗️ Architecture
 
-The pipeline follows a "Build Once, Deploy Anywhere" philosophy using immutable Docker containers.
+The pipeline follows a **"Build Once, Deploy Anywhere"** philosophy using immutable Docker containers.
 
 ```mermaid
 graph LR
@@ -28,7 +47,7 @@ graph LR
     end
     
     subgraph "The Warehouse"
-        Nexus -->|Store| JAR[Enterprise Releases (Maven)]
+        Nexus -->|Store| JAR[Enterprise Releases - Maven]
         Nexus -->|Store| DImg[Docker Registry]
     end
 
@@ -38,82 +57,162 @@ graph LR
     end
 ```
 
----
+### The Flow (Plain English)
 
-## 🛠️ Technology Stack & Decisions
-
-| Component | Technology | Rationale (The "Why") |
-|-----------|------------|-----------------------|
-| **Application** | Java 17, Spring Boot | **Type Safety & Ecology**: The standard for enterprise backends. Robust testing framework (JUnit) and built-in health/metrics (`actuator`). |
-| **CI Orchestrator** | Jenkins (LTS) | **Flexibility**: Unlike SaaS CI (CircleCI/GitHub Actions), Jenkins allows complete control over the execution environment. We run it as **Docker-in-Docker** for ephemeral build agents. |
-| **Artifact Storage** | Sonatype Nexus 3 | **Governance**: Simply building an artifact isn't enough. We need a "Single Source of Truth". Nexus proxies external dependencies (caching Maven Central) and hosts our private internal releases. |
-| **Containerization** | Docker | **Immutability**: Eliminates drift. The exact byte-for-byte image built in CI is what runs in Production. |
-| **IaaC** | Terraform / Ansible | **Reproducibility**: Infrastructure is code. We treat our servers like cattle, not pets. |
+1. **I push code** → GitHub receives it
+2. **Jenkins wakes up** → Pulls the code, runs tests, builds a JAR
+3. **Docker packages it** → Creates an identical "shipping container" every time
+4. **Nexus stores it** → Like a warehouse with version tracking
+5. **Ansible deploys it** → Sends the container to AWS and starts it
 
 ---
 
-## ⚡ The Loop: From Code to Cloud
+## 🛠️ Technology Stack
 
-### 1. The Application (`/app`)
+| Component | Technology | Why I Chose It |
+|-----------|------------|----------------|
+| **Application** | Java 17, Spring Boot | Enterprise standard. Type safety, mature testing (JUnit), built-in observability (`/actuator`). |
+| **Build Tool** | Maven | Industry standard for Java. Declarative dependency management, reproducible builds. |
+| **CI Orchestrator** | Jenkins (LTS) | Unlike GitHub Actions, Jenkins teaches you *how CI actually works* — agents, executors, plugins. |
+| **Artifact Storage** | Sonatype Nexus 3 | "Single Source of Truth" for artifacts. Proxies Maven Central, hosts private releases, Docker registry. |
+| **Containerization** | Docker | Eliminates "works on my machine". Same bytes in dev = same bytes in prod. |
+| **Cloud** | AWS (EC2) | Industry leader. Learning AWS transfers to 70%+ of job postings. |
+| **IaC** | Terraform *(planned)* | Declarative infrastructure. Version-controlled, auditable, reproducible. |
+| **Config Management** | Ansible *(planned)* | Agentless push model. Perfect for configuring immutable infrastructure. |
 
-A **Spring Boot** Microservice.
+---
 
-* **Key Feature**: Exposes generic health endpoints (`/actuator/health`) that allow the orchestration layer (Kubernetes/AWS Load Balancers) to know if the app is alive.
-* **Testing**: Includes unit tests that run on every build. If tests fail, the pipeline stops immediately.
+## 💡 Key Learnings & Challenges
 
-### 2. The Build Factory (`/jenkins`)
+Real learning comes from debugging. Here's what broke and what I learned:
 
-A containerized Jenkins controller.
+| Challenge | What Happened | How I Fixed It | The Lesson |
+|-----------|---------------|----------------|------------|
+| **Security Groups** | App deployed but browser showed "Connection Timeout" | Added port 8080 to AWS inbound rules | Cloud networking is "deny by default" — the bouncer needs a guest list |
+| **Docker-in-Docker** | Jenkins couldn't build Docker images | Mounted host's `/var/run/docker.sock` | Trade-off: less isolation, but simpler and more reliable |
+| **Nexus Authentication** | `401 Unauthorized` when pushing artifacts | Created Jenkins credentials, updated `pom.xml` | Never hardcode secrets. Use credential providers. |
+| **Maven Test Failures** | Pipeline kept failing at test stage | Read the test output, fixed null pointer in setup | CI forces you to write *actually working* tests |
 
-* **Configuration**: We define the pipeline in code (`Jenkinsfile`). This ensures the build process is versioned just like the application code.
-* **Docker Integration**: The Jenkins container mounts the host's Docker socket (`/var/run/docker.sock`), allowing it to spawn sibling containers for build tasks.
+---
 
-### 3. The Warehouse (`/nexus`)
+## 📊 Current Progress
 
-A central repository manager.
+```
+[██████████░░░░░░░░░░] 45% Complete
+```
 
-* **Maven Hosted**: Stores the raw `.jar` files.
-* **Docker Hosted**: Acts as a private registry (similar to DockerHub) for our proprietary images.
-* **Security**: Anonymous access is disabled. The CI server authenticates using a dedicated service account.
+| Milestone | Status | Description |
+|-----------|--------|-------------|
+| ✅ M1 | Complete | Repository scaffold, Git workflow |
+| ✅ M2 | Complete | Spring Boot app, Maven build, unit tests |
+| ✅ M3 | Complete | Docker multi-stage build, Docker Compose |
+| ✅ M4 | Complete | AWS EC2 deployment, Security Groups |
+| ✅ M5 | Complete | Nexus artifact repository (Maven + Docker) |
+| 🔄 M6 | In Progress | Jenkins CI/CD pipeline |
+| ⬚ M7 | Planned | Kubernetes (Minikube → EKS) |
+| ⬚ M8-14 | Planned | Terraform, Ansible, Monitoring, GitOps |
+
+**[→ View Full Progress Tracker](PROGRESS.md)**
+
+---
+
+## 📸 Screenshots
+
+<details>
+<summary>Click to expand screenshots</summary>
+
+### Jenkins Pipeline
+![Jenkins Pipeline](docs/images/jenkins-pipeline.png)
+*Automated build → test → dockerize → push flow*
+
+### Nexus Repository
+![Nexus Repos](docs/images/nexus-repos.png)
+*Maven releases and Docker images stored centrally*
+
+### Application Health Check
+![App Health](docs/images/app-health.png)
+*Spring Actuator endpoint confirming app is alive*
+
+</details>
 
 ---
 
 ## 🚦 How to Run Locally
 
-This project is designed to be spin-up capable on a local workstation using Docker Compose.
-
 ### Prerequisites
+- Docker Desktop (or Docker Engine + Compose)
+- Git
+- Java 17+ (for local development)
+- Maven 3.8+
 
-* Docker Desktop (or Docker Engine)
-* Git
+### Quick Start
 
-### Steps
+```bash
+# Clone the repository
+git clone https://github.com/FarizDemiri/enterprise-devops-bootcamp.git
+cd enterprise-devops-bootcamp
 
-1. **Start the Infrastructure**
+# Start the infrastructure
+docker-compose -f nexus/docker-compose.yml up -d    # The Warehouse
+docker-compose -f jenkins/docker-compose.yml up -d  # The Factory
 
-    ```bash
-    # Start Nexus (The Warehouse)
-    docker-compose -f nexus/docker-compose.yml up -d
-    
-    # Start Jenkins (The Factory)
-    docker-compose -f jenkins/docker-compose.yml up -d
-    ```
+# Access the consoles
+# Jenkins: http://localhost:8083
+# Nexus:   http://localhost:8081
 
-2. **Access the Consoles**
-    * **Jenkins**: `http://localhost:8083`
-    * **Nexus**: `http://localhost:8081`
+# Run the app standalone (for testing)
+cd app
+mvn spring-boot:run
+# App: http://localhost:8080/actuator/health
+```
 
-3. **Run the App (Standalone)**
+### Default Credentials (Lab Only!)
 
-    ```bash
-    cd app
-    mvn spring-boot:run
-    ```
+| Service | Username | Password |
+|---------|----------|----------|
+| Jenkins | admin | (see initial setup) |
+| Nexus | admin | admin123 |
+
+⚠️ *These are intentionally simple for the learning environment. See [Technical Debt](PROGRESS.md#-technical-debt-registry) for production considerations.*
 
 ---
 
-## 🔮 Future Roadmap
+## 🔮 Roadmap
 
-* **Milestone 7**: Ansible Configuration Management (Automated Deployment)
-* **Milestone 8**: Kubernetes (Orchestration on AWS EKS)
-* **Milestone 10**: Monitoring Stack (Prometheus/Grafana)
+| Phase | Milestone | Tools | Status |
+|-------|-----------|-------|--------|
+| **Foundation** | App + Build + Docker | Java, Maven, Docker | ✅ Complete |
+| **CI/CD** | Jenkins Pipeline | Jenkins, Nexus | 🔄 In Progress |
+| **Orchestration** | Kubernetes | Minikube, EKS | ⬚ Next |
+| **Infrastructure** | IaC | Terraform, Ansible | ⬚ Planned |
+| **Observability** | Monitoring | Prometheus, Grafana | ⬚ Planned |
+| **Advanced** | GitOps + Security | Argo CD, Trivy | ⬚ Planned |
+
+---
+
+## 🤔 Why This Project?
+
+I built this to prove I understand DevOps **fundamentals**, not just tool syntax.
+
+Anyone can copy a `Jenkinsfile` from StackOverflow. The difference is:
+- **Knowing *why* Jenkins uses agents** (distributed builds, isolation)
+- **Knowing *why* we need Nexus** (governance, caching, single source of truth)
+- **Knowing *why* Docker matters** (immutability, reproducibility)
+
+This project is my answer to: *"Explain your CI/CD pipeline and justify every component."*
+
+---
+
+## 📬 Let's Connect
+
+I'm currently learning DevOps and seeking opportunities in **DevOps / Platform Engineering / SRE**.
+
+- **LinkedIn**: [linkedin.com/in/FarizDemiri](https://linkedin.com/in/FarizDemiri)
+- **GitHub**: [github.com/FarizDemiri](https://github.com/FarizDemiri)
+- **Email**: Farizdemiri@gmail.com
+
+---
+
+<p align="center">
+  <i>Built with curiosity, debugged with patience, documented with care.</i>
+</p>
