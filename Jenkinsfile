@@ -26,7 +26,7 @@ pipeline {
             steps {
                 dir('app') {
                     script {
-                        dockerImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}")
+                        dockerImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}", "--no-cache .")
                     }
                 }
             }
