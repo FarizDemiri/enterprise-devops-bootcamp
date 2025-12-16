@@ -5,9 +5,17 @@
   <groupId>com.enterprise.devops</groupId>
   <artifactId>enterprise-app</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>enterprise-app</name>
+  <version>0.0.1</version>
+  <name>enterprise-devops-bootcamp</name>
   <url>http://maven.apache.org</url>
+  <description>Enterprise DevOps Bootcamp Application</description>
+
+  <distributionManagement>
+      <repository>
+          <id>nexus-releases</id>
+          <url>http://localhost:8081/repository/enterprise-releases/</url>
+      </repository>
+  </distributionManagement>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
