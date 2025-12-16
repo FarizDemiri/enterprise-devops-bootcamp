@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # ==============================
+  # 1. The Application Service
+  # ==============================
+  app:
+    build: . # Build the Dockerfile in current dir
+    container_name: enterprise-app
+    ports:
+      - "8080:8080" # Host Port : Container Port
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - DB_HOST=postgres # Uses the service name below to resolve IP
+      - DB_PORT=5432
+      - DB_USER=myuser
+      - DB_PASS=mypassword
+      - DB_NAME=mydb
+    depends_on:
+      - postgres # Wait for DB to start first
+    networks:
+      - enterprise-net
+
+  # ==============================
+  # 2. The Database Service
+  # ==============================
+  postgres:
+    image: postgres:15-alpine
+    container_name: enterprise-postgres
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    volumes:
+      - db-data:/var/lib/postgresql/data # Persist data here
+    ports:
+      - "5432:5432" # Expose to host if you want to connect via DBeaver
+    networks:
+      - enterprise-net
+
+# ==============================
+# 3. Shared Resources
+# ==============================
+networks:
+  enterprise-net:
+    driver: bridge
+
+volumes:
+  db-data: # Named volume definition
