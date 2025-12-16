@@ -81,7 +81,7 @@ This is where I hit my first real debugging challenge:
 
 ## 🚀 Summary So Far
 
-I proved that my "Box" (Container) works just as well in the Cloud (Ubuntu) as it does on my Laptop (Windows). 
+I proved that my "Box" (Container) works just as well in the Cloud (Ubuntu) as it does on my Laptop (Windows).
 
 This is the power of Docker: **Write Once, Run Anywhere.**
 
