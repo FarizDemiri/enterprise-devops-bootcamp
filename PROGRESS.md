@@ -112,9 +112,9 @@
 
 #### Phase 6e: Shared Library
 
-- [ ] 6e.1 Created shared library repo
-- [ ] 6e.2 Created reusable functions
-- [ ] 6e.3 Integrated into Jenkinsfile
+- [x] 6e.1 Created shared library repo
+- [x] 6e.2 Created reusable functions
+- [x] 6e.3 Integrated into Jenkinsfile
 
 #### Phase 6f: Webhooks
 

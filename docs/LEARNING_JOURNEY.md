@@ -120,6 +120,21 @@ This is where everything clicked for me:
 
 ---
 
+## Part 6.6: The Franchise Model (Phase 6e)
+
+**The Concept**: Copy-Paste vs. Shared Libraries.
+
+1. **The Problem**: As I imagined scaling to 10 microservices, I realized I would have to copy-paste the same `docker.build` command 10 times. If I wanted to change one flag, I'd have to edit 10 files.
+2. **The Solution**: I created a **Shared Library** (A central "Brain").
+    - I wrote the code *once* in a separate repository (`jenkins-shared-library`).
+    - I taught Jenkins to "load" this brain.
+    - I updated my project to simply say `@Library('jenkins-shared-library')` and call the function.
+3. **The Result**:
+    - **Standardization**: Every project now builds exactly the same way.
+    - **Maintainability**: I fix a bug in the library, and *every* pipeline is instantly fixed.
+
+---
+
 ## 🎯 The Big Picture
 
 Here's what I now understand about DevOps:
