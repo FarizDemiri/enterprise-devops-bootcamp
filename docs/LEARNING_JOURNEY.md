@@ -63,3 +63,17 @@ This document captures the "Essence" of our journey. It strips away the jargon t
 ## 🚀 Summary
 
 You have proven that your "Box" (Container) works just as well in the Cloud (Ubuntu) as it does on your Laptop (Windows). This is the power of Docker: **Write Once, Run Anywhere.**
+
+---
+
+## Part 6: The Automated Factory (Milestone 6)
+
+**The Concept**: Manual Labor vs. Assembly Lines (CI/CD).
+
+1. **The Robot (Jenkins)**: You hired a worker. Unlike you, he doesn't get tired, he doesn't make typos, and he works 24/7.
+2. **The Tooling**: You gave him a hammer (Maven), a truck key (Docker), and credentials to the warehouse (Nexus).
+3. **The Instructions (Pipeline)**: Instead of shouting commands at him, you wrote a Standard Operating Procedure (SOP) called `Jenkinsfile`.
+    * **"Checkout"**: Get the blueprint from the office (GitHub).
+    * **"Build"**: Use the hammer to make the product (Maven Package).
+    * **"Ship"**: Wrap the product (Docker Build) and drive it to the warehouse (Docker Push).
+4. **The Result**: Now, every time you update the blueprint, the factory automatically springs to life and produces a new, perfectly packaged product.

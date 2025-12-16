@@ -17,6 +17,19 @@
 
 ---
 
+## 📉 Technical Debt Registry
+
+> **Mature Engineering** means acknowledging trade-offs. I am tracking these items to be addressed before "True Production".
+
+| Severity | Item | Rationale (Why we did it) | Remediation Plan |
+|:---:|---|---|---|
+| 🔴 **High** | **Secrets in Plaintext** | `admin123` used for lab speed. | Integrate HashiCorp Vault or Jenkins Credentials Provider properly. |
+| 🟠 **Med** | **Root User in Containers** | Simplifies permission issues in Docker-in-Docker. | Create dedicated `jenkins` user in Dockerfile with specific UID/GID mapping. |
+| 🟠 **Med** | **HTTP Only** | SSL Certificates (Let's Encrypt) are hard on `localhost`. | Set up Nginx Reverse Proxy with self-signed certs for local, Real certs for Cloud. |
+| 🟡 **Low** | **No Nexus Backup** | Ephemeral lab environment. | Mount Nexus `blob-store` to AWS S3 or persistent block storage. |
+
+---
+
 ## ✅ Completion Checklist
 
 ### Milestone 0: Decisions & Prerequisites
@@ -70,26 +83,26 @@
 
 #### Phase 6a: Jenkins Setup
 
-- [ ] 6a.1 Created Jenkins Docker container
-- [ ] 6a.2 Completed initial Jenkins setup
-- [ ] 6a.3 Installed required plugins
-- [ ] 6a.4 Created credentials (Git, Nexus)
+- [x] 6a.1 Created Jenkins Docker container
+- [x] 6a.2 Completed initial Jenkins setup
+- [x] 6a.3 Installed required plugins
+- [x] 6a.4 Created credentials (Git, Nexus)
 
 #### Phase 6b: Freestyle Job
 
-- [ ] 6b.1 Created Freestyle job
-- [ ] 6b.2 Configured Git repo connection
-- [ ] 6b.3 Added Maven build step
-- [ ] 6b.4 Job runs successfully
+- [x] 6b.1 Created Freestyle job
+- [x] 6b.2 Configured Git repo connection
+- [x] 6b.3 Added Maven build step
+- [x] 6b.4 Job runs successfully
 
 #### Phase 6c: Pipeline Job (Jenkinsfile)
 
-- [ ] 6c.1 Created basic Jenkinsfile
-- [ ] 6c.2 Added Build stage
-- [ ] 6c.3 Added Test stage
-- [ ] 6c.4 Added Docker Build stage
-- [ ] 6c.5 Added Push to Nexus stage
-- [ ] 6c.6 Pipeline runs end-to-end
+- [x] 6c.1 Created basic Jenkinsfile
+- [x] 6c.2 Added Build stage
+- [x] 6c.3 Added Test stage
+- [x] 6c.4 Added Docker Build stage
+- [x] 6c.5 Added Push to Nexus stage
+- [x] 6c.6 Pipeline runs end-to-end
 
 #### Phase 6d: Multibranch Pipeline
 
@@ -183,10 +196,11 @@
 
 | File Path | Status | Notes |
 |-----------|--------|-------|
-| `/app/pom.xml` | Not started | |
-| `/app/Dockerfile` | Not started | |
-| `/jenkins/Jenkinsfile` | Not started | |
-| `/terraform/main.tf` | Not started | |
+| `/app/pom.xml` | **Completed** | M5: Nexus config |
+| `/app/Dockerfile` | **Completed** | M3: Multi-stage build |
+| `/jenkins/Jenkinsfile` | **Completed** | M6: CI Pipeline |
+| `/nexus/docker-compose.yml` | **Completed** | M5: Artifact Store |
+| `/jenkins/docker-compose.yml` | **Completed** | M6: CI Server |
 
 ---
 
@@ -196,53 +210,29 @@
 
 **What we accomplished**:
 
-- Scaffolded project structure
-- Initialized Git repository
-- Created README and .gitignore
-- Updated PROGRESS.md
+- **Milestone 5 (Nexus)**: Deployed Nexus, configured Repos, published artifacts manually.
+- **Milestone 6 (Jenkins)**: Deployed Jenkins, configured Tools (JDK/Maven), Creds (Nexus/Docker).
+- **Pipeline**: Created `Jenkinsfile` and ran successful CI build (Build -> Docker -> Push).
 
 **What's next**:
 
-- Begin Milestone 2: Create Java Application
+- **Finish Milestone 6**: Advanced Jenkins (Multibranch, Shared Libs, Webhooks).
+- **Roadmap Decision**: Decide between **Milestone 7: Kubernetes** (Original Plan) vs **Ansible** (Project Deviation).
+  - *Context*: `task.md` suggested Ansible next, but `PROGRESS.md` lists Kubernetes. We will resolve this tomorrow.
 
 **Open questions/blockers**:
 
-- None
+- Need to decide if we deploy to EC2-via-Ansible first, or jump straight to Minikube.
 
 ---
 
-## 🎯 Key Decisions Made
+## 🎯 Key Decisions Log
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| Application language | Java (Spring Boot) | Enterprise standard |
-| Local K8s | Minikube | Best for learning, visual dashboard |
-| Jenkins hosting | Local Docker | Free, immediate feedback, avoids EC2 costs/crashes |
-| Cloud platform | AWS | Enterprise standard |
-| CI/CD tool | Jenkins | Enterprise standard |
-| Artifact repo | Nexus | Enterprise standard |
-| Repo Layout | Monorepo | Atomic commits, easier learning curve |
+| Decision | Choice | Alternatives | Rationale |
+|---|---|---|---|
+| **App Language** | **Java (Spring Boot)** | Node.js, Python | Enterprise standard. Strong typing and Maven ecosystem simulate real-world complexity better than lightweight scripts. |
+| **CI Tool** | **Jenkins** | GitHub Actions, CircleCI | "Classic" DevOps. Allows manual configuration of agents (Docker-in-Docker), providing deeper learning than managed SaaS. |
+| **Artifact Repo** | **Nexus** | Artifactory, S3 | Industry standard for on-premise artifact governance. Supports both Maven and Docker natively. |
+| **Deployment** | **Ansible** (Planned) | Shell Scripts, Chef | Agentless push model is perfect for immutable infrastructure deployment without overhead. |
 
 ---
-
-## 💬 Notes for Next Session
-
-(Add any thoughts, questions, or reminders here)
-
----
-
-## 📌 Quick Resume Command
-
-Copy-paste this at the start of your next AI session:
-
-```
-Resume from step [X.Y.Z]. 
-
-Current status:
-- Milestone: [X]
-- Last completed: [describe]
-- Next step: [describe]
-
-Here's my PROGRESS.md:
-[paste the above]
-```
