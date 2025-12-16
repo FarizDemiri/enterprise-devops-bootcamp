@@ -1,3 +1,5 @@
+@Library('jenkins-shared-library') _
+
 pipeline {
     agent any
 
@@ -26,7 +28,8 @@ pipeline {
             steps {
                 dir('app') {
                     script {
-                        dockerImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}", "--no-cache .")
+                         // Using the Shared Library function
+                        dockerImage = buildDockerImage("${DOCKER_REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}")
                     }
                 }
             }
