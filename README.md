@@ -25,7 +25,7 @@ This isn't a "Hello World" deployment. This repository simulates a **real enterp
 
 | Document | Description |
 |----------|-------------|
-| 📖 [**The DevOps Story**](docs/DEVOPS-STORY.md) | Plain-language explanation of every concept (no jargon) |
+| 📖 [**The DevOps Story**](docs/LEARNING_JOURNEY.md) | Plain-language explanation of every concept (no jargon) |
 | 📊 [**Progress Tracker**](PROGRESS.md) | Current status, completion checklist, and technical debt |
 
 ---
