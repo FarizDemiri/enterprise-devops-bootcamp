@@ -14,12 +14,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/FarizDemiri/enterprise-devops-bootcamp.git'
-            }
-        }
-
         stage('Build JAR') {
             steps {
                 dir('app') {
@@ -39,6 +33,9 @@ pipeline {
         }
 
         stage('Push Docker Image') {
+            when {
+                branch 'main'
+            }
             steps {
                 script {
                     docker.withRegistry("http://${DOCKER_REGISTRY}", 'nexus-docker-auth') {
