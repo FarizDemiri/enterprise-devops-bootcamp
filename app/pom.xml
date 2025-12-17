@@ -5,7 +5,7 @@
   <groupId>com.enterprise.devops</groupId>
   <artifactId>enterprise-app</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
   <name>enterprise-devops-bootcamp</name>
   <url>http://maven.apache.org</url>
   <description>Enterprise DevOps Bootcamp Application</description>
