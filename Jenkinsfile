@@ -22,16 +22,24 @@ pipeline {
                     script {
                         echo "Calculating Next Version..."
                         if (env.BRANCH_NAME == 'main') {
-                            // 1. Maven calculates the next version (e.g. 1.0.1 -> 1.0.2)
-                            // 2. We use versions:set to actually update the pom.xml file on disk
-                            sh 'mvn build-helper:parse-version versions:set -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextPatchVersion} versions:commit'
+                            // 1. Read Current Version
+                            def currentVersion = sh(script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
                             
-                            // 3. We read that new version into a variable
-                            def newVersion = sh(script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
+                            // 2. Calculate Next Version (Groovy Magic)
+                            // Assumes format X.Y.Z (e.g., 0.0.1)
+                            def parts = currentVersion.tokenize('.')
+                            def major = parts[0]
+                            def minor = parts[1]
+                            def patch = parts[2].toInteger()
+                            def newVersion = "${major}.${minor}.${patch + 1}"
+                            
+                            // 3. Update pom.xml
+                            sh "mvn versions:set -DnewVersion=${newVersion} versions:commit"
+                            
                             env.IMAGE_TAG = newVersion
                             echo "This is a Release Build. New Version: ${env.IMAGE_TAG}"
                         } else {
-                            // Feature Branches: Just use the build number (Safety fallback)
+                            // Feature Branches
                             env.IMAGE_TAG = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
                             echo "This is a Feature Build. Tag: ${env.IMAGE_TAG}"
                         }
