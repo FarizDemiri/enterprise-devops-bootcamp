@@ -9,10 +9,10 @@
 
 | Field | Value |
 |-------|-------|
-| **Milestone** | 9 - Infrastructure as Code (Terraform) |
+| **Milestone** | 11 - Observability (Prometheus & Grafana) |
 | **Phase** | Production Deployment |
-| **Step Number** | 9.4.0 |
-| **Overall Completion** | 65% |
+| **Step Number** | 11.4.0 |
+| **Overall Completion** | 70% |
 | **Blockers** | None |
 
 ---
@@ -161,10 +161,10 @@
 
 ### Milestone 11: Monitoring
 
-- [ ] 11.1 Deployed Prometheus stack
-- [ ] 11.2 Configured app metrics
-- [ ] 11.3 Created Grafana dashboards
-- [ ] 11.4 Configured alerts
+- [x] 11.1 Deployed Prometheus stack
+- [x] 11.2 Configured app metrics
+- [x] 11.3 Created Grafana dashboards
+- [x] 11.4 Configured alerts
 
 ### Milestone 12: GitOps (Argo CD)
 
