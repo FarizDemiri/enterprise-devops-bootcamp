@@ -13,5 +13,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock # The Magic: Docker-in-Docker
     restart: unless-stopped
 
+  smee:
+    image: node:lts-alpine
+    container_name: smee
+    restart: always
+    command: npx --yes smee-client --url https://smee.io/uHmF3v9tQyKG5snj --target http://jenkins:8080/github-webhook/
+
 volumes:
   jenkins-data:

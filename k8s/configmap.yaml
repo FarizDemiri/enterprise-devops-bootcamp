@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: enterprise-app-config
+data:
+  # This mapping is magic. Spring Boot reads WELCOME_MESSAGE and maps it to the property 'welcome.message'
+  WELCOME_MESSAGE: "Hello from the Kubernetes ConfigMap! (Milestone 7)"

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enterprise-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enterprise-app
+  template:
+    metadata:
+      labels:
+        app: enterprise-app
+    spec:
+      containers:
+      - name: enterprise-app
+        # EKS CONFIG: Pulling from Public Docker Hub
+        image: farizdemiri/enterprise-app:eks-v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: WELCOME_MESSAGE
+          valueFrom:
+            configMapKeyRef:
+              name: enterprise-app-config
+              key: WELCOME_MESSAGE
