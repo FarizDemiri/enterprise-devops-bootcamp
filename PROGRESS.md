@@ -9,10 +9,10 @@
 
 | Field | Value |
 |-------|-------|
-| **Milestone** | 8 - Kubernetes on AWS (EKS) |
+| **Milestone** | 9 - Infrastructure as Code (Terraform) |
 | **Phase** | Production Deployment |
-| **Step Number** | 8.3.0 |
-| **Overall Completion** | 60% |
+| **Step Number** | 9.4.0 |
+| **Overall Completion** | 65% |
 | **Blockers** | None |
 
 ---
@@ -143,13 +143,13 @@
 - [/] 8.4 Configured ECR (Substituted with Docker Hub)
 - [/] 8.5 Jenkins deploys to EKS (Manual Trigger)
 
-### Milestone 9: Terraform
+### Milestone 9: Infrastructure as Code (Terraform)
 
-- [ ] 9.1 Created Terraform project structure
-- [ ] 9.2 Provisioned VPC
-- [ ] 9.3 Provisioned EC2
-- [ ] 9.4 Created modules
-- [ ] 9.5 Configured remote state
+- [x] 9.1 Installed Terraform & Configured Provider
+- [x] 9.2 Created VPC Module (Network Layer)
+- [x] 9.3 Created EKS Module (Compute Layer)
+- [x] 9.4 Solved Dependency Hell (Version Conflict)
+- [x] 9.5 Verified State & Re-deployed App
 
 ### Milestone 10: Ansible
 
@@ -212,12 +212,12 @@
 
 - **Milestone 7 (K8s Fundamentals)**: Mastered Pods, Services, and ConfigMaps entirely locally (Minikube).
 - **Milestone 8 (AWS EKS)**: Installed `eksctl`, created a production cluster, and deployed the app publicly via LoadBalancer.
-- **Documentation**: Overhauled `README.md` to Enterprise standards and updated `LEARNING_JOURNEY.md`.
+- **Milestone 9 (Terraform)**: Replaced manual Click-Ops with repeatable Infrastructure as Code. Solved complex versioning conflicts.
 
 **What's next**:
 
-- **Milestone 9 (Terraform)**: Replace the manual `eksctl` command with declarative Terraform code.
 - **Milestone 11 (Monitoring)**: Install Prometheus/Grafana to observe our EKS cluster.
+- **Milestone 10 (Helm)**: Package our app properly (Skipped M10 temporarily to prioritize Observability).
 
 **Open questions/blockers**:
 
