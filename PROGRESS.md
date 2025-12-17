@@ -118,22 +118,22 @@
 
 #### Phase 6f: Webhooks
 
-- [ ] 6f.1 Configured webhook in Git
-- [ ] 6f.2 Jenkins triggers on push
+- [x] 6f.1 Configured webhook in Git
+- [x] 6f.2 Jenkins triggers on push
 
 #### Phase 6g: Dynamic Versioning
 
-- [ ] 6g.1 Auto-increment version
-- [ ] 6g.2 Commit version back to Git
+- [x] 6g.1 Auto-increment version
+- [x] 6g.2 Commit version back to Git
 
 ### Milestone 7: Kubernetes Fundamentals
 
-- [ ] 7.1 Installed Minikube
-- [ ] 7.2 Created Deployment manifest
-- [ ] 7.3 Created Service manifest
-- [ ] 7.4 Created ConfigMap/Secret
-- [ ] 7.5 Configured health probes
-- [ ] 7.6 App running in Minikube
+- [x] 7.1 Installed Minikube
+- [x] 7.2 Created Deployment manifest
+- [x] 7.3 Created Service manifest
+- [x] 7.4 Created ConfigMap/Secret
+- [x] 7.5 Configured health probes
+- [x] 7.6 App running in Minikube
 
 ### Milestone 8: Kubernetes on AWS (EKS)
 

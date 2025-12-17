@@ -135,25 +135,93 @@ This is where everything clicked for me:
 
 ---
 
-## 🎯 The Big Picture
+## Part 6.7: The Doorbell (Phase 6f)
 
-Here's what I now understand about DevOps:
+**The Concept**: Polling vs. Event-Driven.
 
-| What I Thought Before | What I Know Now |
-|-----------------------|-----------------|
-| "DevOps is just running scripts" | DevOps is about **reliability and repeatability** |
-| "Docker is complicated" | Docker is just **standardized packaging** |
-| "CI/CD is for big companies" | CI/CD saves time **even for solo projects** |
-| "The cloud is magic" | The cloud is just **someone else's computer** with good APIs |
-
----
-
-## 🔮 What's Next
-
-- **Kubernetes**: Instead of manually placing containers on servers, let a scheduler do it automatically
-- **Terraform**: Instead of clicking in AWS console, define infrastructure as code
-- **Monitoring**: Instead of hoping things work, *know* they work with metrics and alerts
+1. **The Problem**: Jenkins was wasting time checking for changes every minute ("Are we there yet?").
+2. **The Solution**: I wired up a **Webhook**.
+    - **The Challenge**: GitHub (Public Internet) can't see my Laptop (Localhost).
+    - **The Fix**: I used **Smee.io** to create a tunnel.
+3. **The Result**: The moment I push code to GitHub, it rings the doorbell. Jenkins wakes up instantly. No more waiting.
 
 ---
 
-*This journey continues...*
+## Part 6.8: The Self-Aware Robot (Phase 6g)
+
+**The Concept**: Static vs. Dynamic Versioning.
+
+1. **The Problem**: My images were named `enterprise-app:5`. But my code said `1.0.0`. They didn't match.
+2. **The Solution**: I taught Jenkins to read.
+    - Jenkins reads the `pom.xml` ("I am version 1.0.1").
+    - Jenkins calculates the next version ("I should be 1.0.2").
+    - Jenkins **Writes Back** to the book (Commits `pom.xml` to Git).
+3. **The Result**: A perfect, synchronized history. Every Docker Image in Nexus matches exactly one Tag in GitHub.
+
+---
+
+## Part 7: The Captain (Milestone 7)
+
+**The Concept**: Orchestration vs. Running Docker.
+
+1. **The Captain (Kubernetes)**: I stopped driving the truck myself (`docker run`). I hired a Captain (`minikube`) to manage the fleet.
+2. **The Manifests**: I stopped giving verbal orders. I started writing formal requests (YAML):
+    - **Deployment**: "Captain, ensure 1 copy of `enterprise-app` is always running."
+    - **Service**: "Captain, give me a permanent phone number (IP) so customers can reach the app, even if the specific truck changes."
+    - **ConfigMap**: "Captain, hand this sheet music (`Welcome Message`) to the singer before they go on stage."
+3. **The Disconnect**: I learned that **CI** (Jenkins) and **CD** (Kubernetes) are two different worlds.
+    - Jenkins puts the box in the Warehouse (Nexus).
+    - Kubernetes pulls the box from the Warehouse.
+    - *Lesson*: On my laptop, I had to manually be the delivery driver (`minikube image load`).
+
+---
+
+## Part 8: The Grand Assembly (The Full Picture)
+
+We have now completed the **"Local DevOps Loop"**.
+It is no longer a collection of tools. It is a **Software Factory**.
+
+### The Flow of Value
+
+1. **Code** (Java) is written in VS Code.
+2. **Commit** (Git) triggers the process via **Webhook**.
+3. **Jenkins** (The Robot) wakes up:
+    - **Checks** the code.
+    - **Bumps** the version (Dynamic Versioning).
+    - **Builds** the JAR (Maven).
+    - **Packages** the Box (Docker).
+    - **Stores** the Box (Nexus).
+    - **Commits** the Version back to Git.
+4. **Kubernetes** (The Captain):
+    - **Reads** the Manifests (Deployment/Service).
+    - **Pulls** the Box from the Warehouse (Nexus).
+    - **Injects** Configuration (ConfigMaps).
+    - **Serves** the App to the User (NodePort/LoadBalancer).
+
+---
+
+## 🎯 Milestone 0-7: The Complete Stack
+
+| Layer | Tool | What it does (My Analogy) | Status |
+| :--- | :--- | :--- | :--- |
+| **Code** | Java/Spring | The Recipe | ✅ |
+| **Build** | Maven | The Oven | ✅ |
+| **Container** | Docker | The TV Dinner Box | ✅ |
+| **PaaS** | Docker Compose | The Kitchen Table | ✅ |
+| **Cloud** | AWS/VM | The Rented House | ✅ |
+| **Artifacts** | Nexus | The Freezer/Warehouse | ✅ |
+| **CI Server** | Jenkins | The Robot Chef | ✅ |
+| **Orchestrator** | Kubernetes | The Port Captain | ✅ |
+| **Config** | ConfigMap | The Sheet Music | ✅ |
+
+---
+
+## 🔮 What's Next: The Cloud Era (Milestone 8+)
+
+We have mastered the **Local** world. Now we must master the **Scale**.
+
+- **Kubernetes in the Cloud (EKS)**: Moving from Minikube (Toy) to Amazon EKS (Production).
+- **Infrastructure as Code (Terraform)**: Creating the entire datacenter with one click.
+- **Observability (Prometheus)**: giving the Captain a Radar system.
+
+*The Foundation is complete. The Skyscraper comes next.*
