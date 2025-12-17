@@ -1,6 +1,6 @@
 # Project Progress Tracker
 >
-> **Last Updated**: 2025-12-15
+> **Last Updated**: 2025-12-17
 > **Paste this at the start of each AI session**
 
 ---
@@ -9,10 +9,10 @@
 
 | Field | Value |
 |-------|-------|
-| **Milestone** | 6 - Jenkins CI/CD Pipeline |
-| **Phase** | CI/CD |
-| **Step Number** | 6.1.0 |
-| **Overall Completion** | 45% |
+| **Milestone** | 8 - Kubernetes on AWS (EKS) |
+| **Phase** | Production Deployment |
+| **Step Number** | 8.3.0 |
+| **Overall Completion** | 60% |
 | **Blockers** | None |
 
 ---
@@ -137,11 +137,11 @@
 
 ### Milestone 8: Kubernetes on AWS (EKS)
 
-- [ ] 8.1 Created EKS cluster
-- [ ] 8.2 Configured kubectl
-- [ ] 8.3 Deployed app to EKS
-- [ ] 8.4 Configured ECR
-- [ ] 8.5 Jenkins deploys to EKS
+- [x] 8.1 Created EKS cluster
+- [x] 8.2 Configured kubectl
+- [x] 8.3 Deployed app to EKS
+- [/] 8.4 Configured ECR (Substituted with Docker Hub)
+- [/] 8.5 Jenkins deploys to EKS (Manual Trigger)
 
 ### Milestone 9: Terraform
 
@@ -184,11 +184,11 @@
 ### Milestone 14: Documentation
 
 - [ ] 14.1 Completed ARCHITECTURE.md
-- [ ] 14.2 Completed EXPLAIN-LIKE-IM-12.md
+- [x] 14.2 Completed LEARNING_JOURNEY.md (Renamed from Explain-Like-Im-12)
 - [ ] 14.3 Completed SECURITY-POSTURE.md
 - [ ] 14.4 Completed RUNBOOK.md
 - [ ] 14.5 Completed INTERVIEW-PREP.md
-- [ ] 14.6 Polished README.md
+- [x] 14.6 Polished README.md
 
 ---
 
@@ -206,23 +206,22 @@
 
 ## 📝 Last Session Summary
 
-**Date**: 2025-12-15
+**Date**: 2025-12-17
 
 **What we accomplished**:
 
-- **Milestone 5 (Nexus)**: Deployed Nexus, configured Repos, published artifacts manually.
-- **Milestone 6 (Jenkins)**: Deployed Jenkins, configured Tools (JDK/Maven), Creds (Nexus/Docker).
-- **Pipeline**: Created `Jenkinsfile` and ran successful CI build (Build -> Docker -> Push).
+- **Milestone 7 (K8s Fundamentals)**: Mastered Pods, Services, and ConfigMaps entirely locally (Minikube).
+- **Milestone 8 (AWS EKS)**: Installed `eksctl`, created a production cluster, and deployed the app publicly via LoadBalancer.
+- **Documentation**: Overhauled `README.md` to Enterprise standards and updated `LEARNING_JOURNEY.md`.
 
 **What's next**:
 
-- **Finish Milestone 6**: Advanced Jenkins (Multibranch, Shared Libs, Webhooks).
-- **Roadmap Decision**: Decide between **Milestone 7: Kubernetes** (Original Plan) vs **Ansible** (Project Deviation).
-  - *Context*: `task.md` suggested Ansible next, but `PROGRESS.md` lists Kubernetes. We will resolve this tomorrow.
+- **Milestone 9 (Terraform)**: Replace the manual `eksctl` command with declarative Terraform code.
+- **Milestone 11 (Monitoring)**: Install Prometheus/Grafana to observe our EKS cluster.
 
 **Open questions/blockers**:
 
-- Need to decide if we deploy to EC2-via-Ansible first, or jump straight to Minikube.
+- None. The platform is live.
 
 ---
 

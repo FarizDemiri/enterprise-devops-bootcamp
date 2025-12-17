@@ -1,227 +1,327 @@
-# 📖 My DevOps Journey: From Code to Cloud
+# My DevOps Journey: From Code to Cloud
 
-This document captures the essence of my learning journey. I've stripped away the jargon to explain *fundamentally* what I did at each stage and why.
+> **Timeline**: Built in ~5 days (Dec 2025)  
+> **Purpose**: Document what I actually learned, not just what I did.
 
----
-
-## Part 1: The Blueprint & The Assembly (Milestones 1 & 2)
-
-**The Concept**: Code vs. Artifacts.
-
-1. **The Blueprint (Source Code)**: I wrote text files in Java. These are just instructions — they can't "do" anything yet.
-
-2. **The Assembly (Maven Build)**: I ran `mvn package`. This took my text instructions and assembled them into a single executable file: the **JAR**.
-
-> **My Analogy**: I wrote a recipe (Code), and Maven baked the cake (JAR).
+This isn't a tutorial. It's a record of how I went from "I know Docker exists" to a working CI/CD pipeline with Kubernetes—including everything that broke along the way.
 
 ---
 
-## Part 2: The Standardization (Milestone 3)
+## The Map
 
-**The Concept**: "It works on my machine" vs. Containers.
-
-1. **The Packaging (Docker Build)**: I ran `docker build`. This took my JAR (the cake) and put it inside a sealed box (the Container Image) along with a plate, a fork, and a napkin (the OS and Java Runtime).
-
-> **My Analogy**: Now I have a **TV Dinner**. I don't need a kitchen to eat it anymore. I just need a microwave (Docker).
-
-2. **The Orchestration (Docker Compose)**: I learned that an application is almost never just "code" — it's **Code + Data**. I defined a universe (`docker-compose.yml`) where my App and Database live together.
-
-> **My Analogy**: I stopped building custom furniture in my living room and instead designed a flat-pack (IKEA style) box that contains everything needed to assemble it.
-
----
-
-## Part 3: The Distribution (Milestone 4)
-
-**The Concept**: From "My Desk" to "The World".
-
-1. **Buying the Land (Provisioning)**: I went to a real estate agent (AWS) and rented a plot of land (EC2 Instance).
-   - **Result**: I now own a computer in a massive data center. It has its own IP address, but it's empty.
-
-2. **Moving In (SSH)**: I telecommuted into that server using a secure tunnel (`ssh`). I installed the furniture assembly tools (Docker).
-
-3. **Shipping the Goods (SCP)**: I acted as the courier. I drove the truck with the flat-pack box (`docker-compose.yml`) from my laptop to the rented house.
-
-4. **Assembly (Deployment)**: I acted as the site manager. I yelled "BUILD!" (`docker-compose up`) and the server obeyed.
+| Part | Milestone | Concept | Time Spent |
+|------|-----------|---------|------------|
+| 1 | M1-2 | Code → Artifact | ~3 hours |
+| 2 | M3 | Containers | ~2 hours |
+| 3 | M4 | Cloud Deployment | ~4 hours |
+| 4 | — | Networking (Debugging) | ~2 hours |
+| 5 | M5 | Artifact Storage | ~3 hours |
+| 6 | M6 | CI/CD Automation | ~8 hours |
+| 7 | M7 | Container Orchestration | ~4 hours |
+| 8 | — | The Full Picture | — |
 
 ---
 
-## Part 4: The Bouncer (Networking)
+## Part 1: The Blueprint & The Assembly
 
-**The Concept**: Firewalls and Security Groups.
+**Milestones 1-2 | Concept: Code vs. Artifacts**
 
-This is where I hit my first real debugging challenge:
+I wrote text files in Java. That's all source code is—human-readable instructions that can't actually *do* anything yet.
 
-1. **The Situation**: My app was serving requests on Port 8080.
+Then I ran `mvn package`. Maven took my instructions and assembled them into a single executable file: the **JAR**.
 
-2. **The Problem**: The cloud comes with a Bouncer (Security Group). I had told him "Only let people in through the Front Door (Port 80) and the Staff Entrance (Port 22 SSH)."
+> **Analogy**: I wrote a recipe (Code), and Maven baked the cake (JAR).
 
-3. **The Guest Experience**: My browser tried to enter the Side Door (Port 8080). The Bouncer had no instructions for this door, so he completely ignored the knocking (Connection Timeout).
-
-4. **The Fix**: I updated the Guest List (Inbound Rules) to explicitly allow traffic on Port 8080.
-
-> **What I Learned**: Cloud networking is "deny by default." If I don't explicitly allow it, it doesn't exist.
+**What clicked**: The JAR is the *product*. The code is just the *blueprint*. Everything downstream (Docker, Kubernetes, production) only cares about the JAR.
 
 ---
 
-## Part 5: The Warehouse (Milestone 5)
+## Part 2: The Standardization
 
-**The Concept**: Centralized Storage.
+**Milestone 3 | Concept: "Works on my machine" → Containers**
 
-1. **The Warehouse (Nexus)**: I spun up a dedicated server to store my work. This ensures that even if my laptop breaks, the "Company Assets" are safe.
-   - **The Maven Shelf**: Stores the "Raw Ingredient" (JAR file).
-   - **The Docker Shelf**: Stores the "Finished Meal" (Docker Image).
+I ran `docker build`. This took my JAR and put it inside a sealed box along with everything it needs to run—the OS, the Java runtime, the exact dependencies.
 
-2. **The Shipping Label**: I learned that a package must be properly labeled (Tagged) with the warehouse address (`localhost:8082`) or the guard won't accept it.
+> **Analogy**: The JAR is a cake. The Docker image is a **TV Dinner**—sealed, complete, just needs a microwave (Docker) to heat up.
 
-3. **The Security**: I issued ID cards (`settings.xml` and `docker login`) so that only authorized users can stock the shelves.
+Then I learned that applications are never just code. They're **Code + Data**. Docker Compose let me define a universe where my app and its database live together.
 
-> **What I Learned**: Artifacts need a "single source of truth." Building locally is fine for testing, but production needs a governed, versioned warehouse.
+> **Analogy**: Instead of building custom furniture in my living room, I designed a flat-pack IKEA box that contains everything needed for assembly anywhere.
 
----
-
-## 🚀 Summary So Far
-
-I proved that my "Box" (Container) works just as well in the Cloud (Ubuntu) as it does on my Laptop (Windows).
-
-This is the power of Docker: **Write Once, Run Anywhere.**
+**What clicked**: The multi-stage Dockerfile. Build in a fat image (with Maven, compilers, tools), then copy *only* the JAR into a tiny runtime image. The final image went from 500MB to 80MB.
 
 ---
 
-## Part 6: The Automated Factory (Milestone 6)
+## Part 3: The Distribution
 
-**The Concept**: Manual Labor vs. Assembly Lines (CI/CD).
+**Milestone 4 | Concept: Local → Cloud**
 
-This is where everything clicked for me:
+I rented a computer in the cloud (EC2). It had an IP address but was completely empty.
 
-1. **The Robot (Jenkins)**: I hired a worker. Unlike me, he doesn't get tired, he doesn't make typos, and he works 24/7.
+The process:
 
-2. **The Tooling**: I gave him a hammer (Maven), a truck key (Docker), and credentials to the warehouse (Nexus).
+1. **Provision**: Click through AWS console, pick an instance type, launch
+2. **SSH in**: `ssh -i key.pem ubuntu@<ip>` — I'm now inside a server in Virginia
+3. **Install Docker**: Same commands I'd run locally
+4. **Copy files**: `scp docker-compose.yml` to the server
+5. **Deploy**: `docker-compose up -d`
 
-3. **The Instructions (Pipeline)**: Instead of shouting commands at him, I wrote a Standard Operating Procedure (SOP) called `Jenkinsfile`:
-   - **"Checkout"**: Get the blueprint from the office (GitHub).
-   - **"Build"**: Use the hammer to make the product (Maven Package).
-   - **"Ship"**: Wrap the product (Docker Build) and drive it to the warehouse (Docker Push).
-
-4. **The Result**: Now, every time I update the blueprint, the factory automatically springs to life and produces a new, perfectly packaged product.
-
-> **What I Learned**: CI/CD isn't magic — it's just automating the exact steps I was doing manually. The value is consistency, speed, and eliminating human error.
+**What clicked**: The cloud isn't magic. It's just someone else's computer with a good API. Everything I did locally, I can do remotely.
 
 ---
 
-## Part 6.5: The Smart Factory (Phase 6d)
+## Part 4: The Bouncer
 
-**The Concept**: Single Track vs. Multibranch.
+**Concept: Networking & Security Groups**
 
-1. **The Upgrade**: I fired the "Doorman" (static job) and hired a "Floor Manager" (Multibranch Pipeline).
-2. **The Logic**: The Manager scans the building (Git) every minute.
-    - If it finds a **Feature Branch**, it builds it in a sandbox (Test, but don't Push).
-    - If it finds the **Main Branch**, it runs the full production line (Test + Push to Nexus).
-3. **The Result**: I can now experiment safely on side branches without polluting my production warehouse.
+This is where I hit my first real wall.
 
----
+**The situation**: App deployed. Docker running. Logs look healthy.
 
-## Part 6.6: The Franchise Model (Phase 6e)
+**The symptom**: Browser shows "Connection Timeout."
 
-**The Concept**: Copy-Paste vs. Shared Libraries.
+**The debugging**:
 
-1. **The Problem**: As I imagined scaling to 10 microservices, I realized I would have to copy-paste the same `docker.build` command 10 times. If I wanted to change one flag, I'd have to edit 10 files.
-2. **The Solution**: I created a **Shared Library** (A central "Brain").
-    - I wrote the code *once* in a separate repository (`jenkins-shared-library`).
-    - I taught Jenkins to "load" this brain.
-    - I updated my project to simply say `@Library('jenkins-shared-library')` and call the function.
-3. **The Result**:
-    - **Standardization**: Every project now builds exactly the same way.
-    - **Maintainability**: I fix a bug in the library, and *every* pipeline is instantly fixed.
+- Is the app running? Yes (`docker ps` shows it up)
+- Is it listening? Yes (`curl localhost:8080` inside the server works)
+- Is it the network? ...
 
----
+**The root cause**: AWS Security Groups. By default, all inbound traffic is blocked. I'd allowed SSH (port 22) but not my app (port 8080).
 
-## Part 6.7: The Doorbell (Phase 6f)
+**The fix**: Add inbound rule for port 8080 from 0.0.0.0/0.
 
-**The Concept**: Polling vs. Event-Driven.
+> **Analogy**: The cloud comes with a Bouncer (Security Group). I told him "only let people in the front door (22) and staff entrance (80)." My app was serving from the side door (8080). The Bouncer had no instructions for that door, so he ignored all knocking.
 
-1. **The Problem**: Jenkins was wasting time checking for changes every minute ("Are we there yet?").
-2. **The Solution**: I wired up a **Webhook**.
-    - **The Challenge**: GitHub (Public Internet) can't see my Laptop (Localhost).
-    - **The Fix**: I used **Smee.io** to create a tunnel.
-3. **The Result**: The moment I push code to GitHub, it rings the doorbell. Jenkins wakes up instantly. No more waiting.
+**What clicked**: Cloud networking is "deny by default." If you don't explicitly allow it, it doesn't exist. This is good for security, confusing for debugging.
 
 ---
 
-## Part 6.8: The Self-Aware Robot (Phase 6g)
+## Part 5: The Warehouse
 
-**The Concept**: Static vs. Dynamic Versioning.
+**Milestone 5 | Concept: Artifact Governance**
 
-1. **The Problem**: My images were named `enterprise-app:5`. But my code said `1.0.0`. They didn't match.
-2. **The Solution**: I taught Jenkins to read.
-    - Jenkins reads the `pom.xml` ("I am version 1.0.1").
-    - Jenkins calculates the next version ("I should be 1.0.2").
-    - Jenkins **Writes Back** to the book (Commits `pom.xml` to Git).
-3. **The Result**: A perfect, synchronized history. Every Docker Image in Nexus matches exactly one Tag in GitHub.
+I spun up Nexus—a dedicated server to store my artifacts.
 
----
+Why not just rebuild from source every time? Because:
 
-## Part 7: The Captain (Milestone 7)
+- Builds can be non-deterministic (different timestamps, different dependency resolutions)
+- You lose the audit trail ("what exact bytes are running in prod?")
+- It's slow
 
-**The Concept**: Orchestration vs. Running Docker.
+Nexus gives me:
 
-1. **The Captain (Kubernetes)**: I stopped driving the truck myself (`docker run`). I hired a Captain (`minikube`) to manage the fleet.
-2. **The Manifests**: I stopped giving verbal orders. I started writing formal requests (YAML):
-    - **Deployment**: "Captain, ensure 1 copy of `enterprise-app` is always running."
-    - **Service**: "Captain, give me a permanent phone number (IP) so customers can reach the app, even if the specific truck changes."
-    - **ConfigMap**: "Captain, hand this sheet music (`Welcome Message`) to the singer before they go on stage."
-3. **The Disconnect**: I learned that **CI** (Jenkins) and **CD** (Kubernetes) are two different worlds.
-    - Jenkins puts the box in the Warehouse (Nexus).
-    - Kubernetes pulls the box from the Warehouse.
-    - *Lesson*: On my laptop, I had to manually be the delivery driver (`minikube image load`).
+- **Maven repository**: Stores the JAR files
+- **Docker registry**: Stores the container images
+- **Version history**: Every build is immutable and traceable
 
----
+> **Analogy**: Nexus is the **Freezer Warehouse**. Instead of baking a fresh cake every time someone wants dessert, I bake once, label it with a date, and store it. When someone orders, I ship the exact same frozen cake. Same bytes, every time.
 
-## Part 8: The Grand Assembly (The Full Picture)
+**What broke**: `401 Unauthorized` when pushing.
 
-We have now completed the **"Local DevOps Loop"**.
-It is no longer a collection of tools. It is a **Software Factory**.
+**Root cause**: I hadn't configured credentials. Maven didn't know how to authenticate.
 
-### The Flow of Value
+**Fix**: Created `settings.xml` with Nexus credentials, added to Jenkins.
 
-1. **Code** (Java) is written in VS Code.
-2. **Commit** (Git) triggers the process via **Webhook**.
-3. **Jenkins** (The Robot) wakes up:
-    - **Checks** the code.
-    - **Bumps** the version (Dynamic Versioning).
-    - **Builds** the JAR (Maven).
-    - **Packages** the Box (Docker).
-    - **Stores** the Box (Nexus).
-    - **Commits** the Version back to Git.
-4. **Kubernetes** (The Captain):
-    - **Reads** the Manifests (Deployment/Service).
-    - **Pulls** the Box from the Warehouse (Nexus).
-    - **Injects** Configuration (ConfigMaps).
-    - **Serves** the App to the User (NodePort/LoadBalancer).
+**What clicked**: Artifacts need governance. "Which version is in prod?" should never be a mystery.
 
 ---
 
-## 🎯 Milestone 0-7: The Complete Stack
+## Part 6: The Automated Factory
 
-| Layer | Tool | What it does (My Analogy) | Status |
-| :--- | :--- | :--- | :--- |
-| **Code** | Java/Spring | The Recipe | ✅ |
-| **Build** | Maven | The Oven | ✅ |
-| **Container** | Docker | The TV Dinner Box | ✅ |
-| **PaaS** | Docker Compose | The Kitchen Table | ✅ |
-| **Cloud** | AWS/VM | The Rented House | ✅ |
-| **Artifacts** | Nexus | The Freezer/Warehouse | ✅ |
-| **CI Server** | Jenkins | The Robot Chef | ✅ |
-| **Orchestrator** | Kubernetes | The Port Captain | ✅ |
-| **Config** | ConfigMap | The Sheet Music | ✅ |
+**Milestone 6 | Concept: CI/CD**
+
+This is where everything connected.
+
+I stopped being the one who runs `mvn package` and `docker build`. I hired a robot (Jenkins) to do it for me.
+
+**The setup**:
+
+1. Jenkins runs in Docker (on my laptop)
+2. I give it tools: Maven, Docker, credentials for Nexus and GitHub
+3. I write a `Jenkinsfile`—a script that defines the assembly line
+
+**The pipeline**:
+
+```
+Checkout → Build JAR → Run Tests → Build Image → Push to Nexus → Update Version
+```
+
+> **Analogy**: I hired a Robot Chef. I don't shout orders anymore—I wrote a recipe book (Jenkinsfile) and the robot follows it perfectly every time. No typos, no forgotten steps, no "I thought I ran the tests."
+
+**What broke (a lot)**:
+
+| Problem | Symptom | Fix |
+|---------|---------|-----|
+| Docker-in-Docker | Jenkins can't run `docker build` | Mount host's `/var/run/docker.sock` |
+| Credentials | 401 on push | Configure Jenkins credentials, not hardcoded |
+| Infinite loops | Pipeline triggers itself forever | Add `[skip ci]` to version bump commits |
+| Webhook delivery | GitHub can't reach localhost | Use Smee.io as a tunnel |
 
 ---
 
-## 🔮 What's Next: The Cloud Era (Milestone 8+)
+### Part 6.5: The Smart Factory
 
-We have mastered the **Local** world. Now we must master the **Scale**.
+**Phase 6d | Concept: Multibranch Pipelines**
 
-- **Kubernetes in the Cloud (EKS)**: Moving from Minikube (Toy) to Amazon EKS (Production).
-- **Infrastructure as Code (Terraform)**: Creating the entire datacenter with one click.
-- **Observability (Prometheus)**: giving the Captain a Radar system.
+One pipeline for everything? Bad idea.
 
-*The Foundation is complete. The Skyscraper comes next.*
+I don't want feature branch experiments polluting my production artifact registry.
+
+**The upgrade**: Multibranch Pipeline. Jenkins scans all branches and applies different rules:
+
+- `main` → Full pipeline (test, build, push, version bump)
+- `feature/*` → Build and test only (no push to Nexus)
+
+**What clicked**: The pipeline should be branch-aware. Not all code deserves to be an artifact.
+
+---
+
+### Part 6.6: The Franchise Model
+
+**Phase 6e | Concept: Shared Libraries**
+
+I imagined having 10 microservices. Each needs a Jenkinsfile. Each Jenkinsfile has the same Docker build logic.
+
+Copy-paste 10 times? That's a maintenance nightmare.
+
+**The solution**: Jenkins Shared Library. I wrote the Docker build function *once* in a separate repo. Every Jenkinsfile just calls `buildDockerImage()`.
+
+**What clicked**: DRY applies to CI/CD too. One bug fix in the library fixes all pipelines.
+
+---
+
+### Part 6.7: The Doorbell
+
+**Phase 6f | Concept: Webhooks vs. Polling**
+
+Jenkins was checking GitHub every minute: "Any new commits? Any new commits?"
+
+Wasteful. And slow—up to 60 seconds delay.
+
+**The fix**: Webhooks. GitHub *tells* Jenkins when something happens.
+
+**The problem**: GitHub (public internet) can't reach my laptop (localhost).
+
+**The solution**: Smee.io. It's a tunnel—GitHub sends to Smee, Smee forwards to my local Jenkins.
+
+**What clicked**: Event-driven beats polling. But localhost needs a bridge to the public internet.
+
+---
+
+### Part 6.8: The Self-Aware Robot
+
+**Phase 6g | Concept: Dynamic Versioning**
+
+My images were tagged with build numbers (`enterprise-app:47`). My `pom.xml` said version `1.0.0`. They didn't match.
+
+**The fix**: Jenkins reads the current version from `pom.xml`, calculates the next version, updates the file, and commits it back to Git.
+
+Now the Docker tag matches the Git tag matches the `pom.xml`. Perfect traceability.
+
+**What broke**: Infinite loops. Jenkins commits the version bump, which triggers the webhook, which triggers Jenkins, which commits...
+
+**Fix**: Commit message includes `[skip ci]`. Jenkins recognizes this and doesn't trigger.
+
+**What clicked**: Version should be automated, not manual. But CI systems need escape hatches.
+
+---
+
+## Part 7: The Captain
+
+**Milestone 7 | Concept: Container Orchestration**
+
+Docker Compose works for one server. What about 50 servers? What if a container crashes?
+
+Enter Kubernetes.
+
+I stopped giving direct orders (`docker run`). I started writing **declarations**:
+
+```yaml
+# "I want 2 copies of this app running at all times"
+replicas: 2
+```
+
+Kubernetes figures out the rest—which server, what port, how to restart if it dies.
+
+**The manifests I wrote**:
+
+- `Deployment`: What container to run, how many replicas
+- `Service`: A stable network endpoint (containers come and go, the Service IP doesn't)
+- `ConfigMap`: Environment variables, injected at runtime
+
+> **Analogy**: I stopped driving the delivery truck myself. I hired a **Captain** (Kubernetes) and gave him a shipping manifest. "Make sure this cargo reaches port. I don't care which truck you use."
+
+**What broke**:
+
+| Problem | Symptom | Root Cause | Fix |
+|---------|---------|------------|-----|
+| Image not found | `ImagePullBackOff` | Minikube can't reach localhost:8082 | `minikube image load` to manually import |
+| ConfigMap not applied | Old welcome message | Forgot to apply configmap.yaml first | Apply order matters |
+| Pod crashloop | `CrashLoopBackOff` | Typo in environment variable name | Check `kubectl logs` |
+
+**What clicked**: Kubernetes is declarative. I describe the *desired state*, it figures out how to get there. But debugging requires understanding what it's actually doing (`kubectl describe`, `kubectl logs`).
+
+---
+
+## Part 8: The Full Picture
+
+We now have a complete **Software Factory**.
+
+```
+Code → Git → Jenkins → Maven → Docker → Nexus → Kubernetes → Users
+```
+
+No manual steps. No SSH. No "I forgot to run tests."
+
+### The Value Flow
+
+1. I write code, push to GitHub
+2. Webhook triggers Jenkins instantly
+3. Jenkins:
+   - Reads current version from `pom.xml`
+   - Bumps to next version
+   - Builds JAR, runs tests
+   - Builds Docker image with version tag
+   - Pushes to Nexus
+   - Commits version back to Git (with `[skip ci]`)
+4. Kubernetes pulls the image and deploys
+5. Users hit the LoadBalancer, get served by healthy pods
+
+### The Mental Model Shift
+
+| Before | After |
+|--------|-------|
+| "DevOps is running scripts" | DevOps is designing reliable systems |
+| "Docker is complicated" | Docker is just standardized packaging |
+| "CI/CD is for big teams" | CI/CD saves time even for solo projects |
+| "The cloud is magic" | The cloud is rented computers with APIs |
+| "Kubernetes is overkill" | Kubernetes is a declarative control plane |
+
+---
+
+## What's Next
+
+| Milestone | Concept | Why It Matters |
+|-----------|---------|----------------|
+| **M8: EKS** | Cloud Kubernetes | Minikube is a toy. EKS is production. |
+| **M9: Terraform** | Infrastructure as Code | Stop clicking. Define the datacenter in Git. |
+| **M11: Prometheus** | Observability | Stop hoping it works. Know it works. |
+| **M12: Argo CD** | GitOps | Git becomes the source of truth for deployments, not just code. |
+| **M13: Trivy** | Security Scanning | Find vulnerabilities before production. |
+
+---
+
+## The Takeaway
+
+I didn't learn DevOps by watching tutorials. I learned it by breaking things:
+
+- Security Groups taught me cloud networking
+- 401 errors taught me credential management
+- Infinite loops taught me CI escape hatches
+- ImagePullBackOff taught me container registry architecture
+
+The tools are just tools. The skill is understanding *why* they exist and *when* they break.
+
+---
+
+*This document will grow as the project continues.*
