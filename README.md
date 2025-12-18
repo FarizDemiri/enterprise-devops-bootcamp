@@ -3,8 +3,8 @@
 > A production-grade CI/CD implementation demonstrating the complete software supply chain—from commit to Kubernetes deployment.
 
 [![Build](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/FarizDemiri/enterprise-devops-bootcamp)
-[![Progress](https://img.shields.io/badge/progress-50%25-yellow)](PROGRESS.md)
-[![Kubernetes](https://img.shields.io/badge/local-Minikube-blue)](k8s/)
+[![Progress](https://img.shields.io/badge/progress-75%25-green)](PROGRESS.md)
+[![Kubernetes](https://img.shields.io/badge/AWS-EKS-orange)](terraform/)
 
 ---
 
@@ -79,7 +79,10 @@ graph LR
 | **CI Server** | Jenkins | Teaches how CI actually works—agents, executors, pipelines—not just YAML. |
 | **Artifacts** | Sonatype Nexus | Single source of truth. Hosts both Maven JARs and Docker images. Audit trail. |
 | **Containers** | Docker | Immutable deployments. Eliminates environment drift. |
-| **Orchestration** | Kubernetes (Minikube) | Self-healing, declarative, industry standard. Local-first, cloud-ready. |
+| **Orchestration** | Kubernetes (EKS) | Self-healing, declarative, industry standard. Moved from Minikube (Toy) to EKS (Production). |
+| **Infrastructure** | Terraform | Infrastructure as Code. Defines the VPC, Subnets, and Cluster in `.tf` files. |
+| **Packaging** | Helm | The "App Store" for Kubernetes. Templates our YAMLs for multi-environment support. |
+| **Observability** | Prometheus/Grafana | The "CCTV". Metrics collection and visualization. "Flying blind" is over. |
 | **Webhooks** | Smee.io | Tunnels GitHub webhooks to localhost for instant CI triggers. |
 
 ---
@@ -95,13 +98,15 @@ Real learning comes from debugging. Here's what actually happened:
 | **Nexus 401** | Push rejected | Missing credentials | Configured `settings.xml` + Jenkins credentials | Never hardcode secrets |
 | **Infinite loops** | Pipeline triggers itself | Version commit triggers webhook | Added `[skip ci]` to commit message | CI commits need escape hatches |
 | **Air gap** | EKS can't pull from localhost Nexus | Localhost doesn't exist in cloud | Pushed to Docker Hub as intermediary | Local registries need exposure |
+| **Version Hell** | Terraform Provider Conflicts | v6.0 broke v5.0 code | Pinned versions in `main.tf` | Lock your dependencies |
+| **Blindness** | App crashing silently | No logs/metrics | Installed Prometheus Stack | You can't fix what you can't see |
 
 ---
 
 ## Project Status
 
 ```
-[██████████░░░░░░░░░░] 50% Complete
+[███████████████░░░░░] 75% Complete
 ```
 
 | Milestone | Status | Description |
@@ -112,8 +117,12 @@ Real learning comes from debugging. Here's what actually happened:
 | ✅ M5 | Complete | Nexus artifact repository |
 | ✅ M6 | Complete | Jenkins pipeline (multibranch, shared library, webhooks, versioning) |
 | ✅ M7 | Complete | Kubernetes on Minikube |
-| 🔄 M8 | In Progress | Kubernetes on AWS EKS |
-| ⬜ M9-14 | Planned | Terraform, Ansible, Prometheus/Grafana, Argo CD, Security scanning |
+| ✅ M8 | Complete | Kubernetes on AWS EKS |
+| ✅ M9 | Complete | Infrastructure as Code (Terraform) |
+| ✅ M10 | Complete | Helm Packaging (Charts, Values, Templates) |
+| ✅ M11 | Complete | Observability (Prometheus & Grafana) |
+| 🔄 M12 | In Progress | GitOps (Argo CD) |
+| ⬜ M13-14 | Planned | Security scanning, Final Polish |
 
 → [Full checklist in PROGRESS.md](PROGRESS.md)
 
@@ -152,14 +161,17 @@ mvn spring-boot:run
 # http://localhost:8080/actuator/health
 ```
 
-### Quick Start: Kubernetes (Minikube)
+### Quick Start: Kubernetes (EKS + Helm)
 
 ```bash
-minikube start
-kubectl apply -f k8s/configmap.yaml
-kubectl apply -f k8s/deployment.yaml
-kubectl apply -f k8s/service.yaml
-minikube service enterprise-app
+# 1. Provision Infrastructure
+cd terraform && terraform apply
+
+# 2. Deploy Monitoring Stack
+helm install my-prometheus prometheus-community/kube-prometheus-stack --namespace monitoring
+
+# 3. Deploy Application
+helm install my-app ./charts/enterprise-app
 ```
 
 ### Full Setup Guide
@@ -193,9 +205,10 @@ I'm tracking these intentional shortcuts:
 
 ## What's Next
 
-- [ ] Deploy to AWS EKS (Milestone 8)
-- [ ] Terraform for VPC/EKS provisioning (Milestone 9)
-- [ ] Prometheus + Grafana monitoring (Milestone 11)
+- [x] Deploy to AWS EKS (Milestone 8)
+- [x] Terraform for VPC/EKS provisioning (Milestone 9)
+- [x] Helm Packaging (Milestone 10)
+- [x] Prometheus + Grafana monitoring (Milestone 11)
 - [ ] Argo CD for GitOps (Milestone 12)
 - [ ] Trivy security scanning (Milestone 13)
 
