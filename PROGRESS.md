@@ -9,10 +9,10 @@
 
 | Field | Value |
 |-------|-------|
-| **Milestone** | 11 - Observability (Prometheus & Grafana) |
+| **Milestone** | 10 - Package Management (Helm) |
 | **Phase** | Production Deployment |
-| **Step Number** | 11.4.0 |
-| **Overall Completion** | 70% |
+| **Step Number** | 10.5.0 |
+| **Overall Completion** | 75% |
 | **Blockers** | None |
 
 ---
@@ -151,13 +151,13 @@
 - [x] 9.4 Solved Dependency Hell (Version Conflict)
 - [x] 9.5 Verified State & Re-deployed App
 
-### Milestone 10: Ansible
+### Milestone 10: Package Management (Helm)
 
-- [ ] 10.1 Created inventory
-- [ ] 10.2 Created Docker playbook
-- [ ] 10.3 Created deploy playbook
-- [ ] 10.4 Created roles
-- [ ] 10.5 Integrated with Terraform
+- [x] 10.1 Created Chart structure
+- [x] 10.2 Templated Deployment & Service
+- [x] 10.3 Managed Values.yaml (Environments)
+- [x] 10.4 Packaged and Versioned Chart
+- [x] 10.5 Deployed custom app via Helm
 
 ### Milestone 11: Monitoring
 
