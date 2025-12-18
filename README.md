@@ -3,7 +3,7 @@
 > A production-grade CI/CD implementation demonstrating the complete software supply chain—from commit to Kubernetes deployment.
 
 [![Build](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/FarizDemiri/enterprise-devops-bootcamp)
-[![Progress](https://img.shields.io/badge/progress-75%25-green)](PROGRESS.md)
+[![Progress](https://img.shields.io/badge/progress-100%25-green)](PROGRESS.md)
 [![Kubernetes](https://img.shields.io/badge/AWS-EKS-orange)](terraform/)
 
 ---
@@ -35,6 +35,8 @@ An automated pipeline where:
 
 ## Architecture
 
+> 🏛️ **[See the Full System Architecture Diagram](docs/ARCHITECTURE.md)**
+
 ```mermaid
 graph LR
     A[Developer] -->|git push| B[GitHub]
@@ -43,14 +45,14 @@ graph LR
     subgraph "CI Pipeline"
         C -->|1| D[Build JAR]
         D -->|2| E[Run Tests]
-        E -->|3| F[Build Image]
-        F -->|4| G[Push to Nexus]
-        G -->|5| H[Bump Version]
+        D -->|3| Trivy[Security Scan]
+        E -->|4| F[Build Image]
+        F -->|5| G[Push to Nexus]
     end
     
     subgraph "CD Pipeline"
-        I[Kubernetes] -->|pull| G
-        I --> J[Running Pods]
+        I[Argo CD] -->|sync| G
+        I --> J[EKS Cluster]
     end
     
     J --> K[Users]
@@ -63,10 +65,11 @@ graph LR
 | 1 | Developer pushes code | Git |
 | 2 | Webhook notifies CI server | Smee → Jenkins |
 | 3 | Code is compiled and tested | Maven |
-| 4 | Application is packaged into container | Docker |
-| 5 | Image is pushed with semantic version | Nexus |
-| 6 | Version is committed back to repo | Jenkins → Git |
-| 7 | Kubernetes pulls and deploys | Minikube / EKS |
+| 4 | Image is scanned for vulnerabilities | Trivy |
+| 5 | Application is packaged into container | Docker |
+| 6 | Image is pushed with semantic version | Nexus |
+| 7 | Argo CD detects change | GitOps |
+| 8 | Kubernetes pulls and deploys | AWS EKS |
 
 ---
 
@@ -78,10 +81,12 @@ graph LR
 | **Build** | Maven | Reproducible builds. Dependency resolution. Industry standard for Java. |
 | **CI Server** | Jenkins | Teaches how CI actually works—agents, executors, pipelines—not just YAML. |
 | **Artifacts** | Sonatype Nexus | Single source of truth. Hosts both Maven JARs and Docker images. Audit trail. |
+| **Security** | Trivy | Vulnerability scanner ("Shift Left"). Blocks builds if Critical CVEs are found. |
 | **Containers** | Docker | Immutable deployments. Eliminates environment drift. |
 | **Orchestration** | Kubernetes (EKS) | Self-healing, declarative, industry standard. Moved from Minikube (Toy) to EKS (Production). |
 | **Infrastructure** | Terraform | Infrastructure as Code. Defines the VPC, Subnets, and Cluster in `.tf` files. |
 | **Packaging** | Helm | The "App Store" for Kubernetes. Templates our YAMLs for multi-environment support. |
+| **CD** | Argo CD | GitOps controller. Ensures the cluster state always matches the Git repo. |
 | **Observability** | Prometheus/Grafana | The "CCTV". Metrics collection and visualization. "Flying blind" is over. |
 | **Webhooks** | Smee.io | Tunnels GitHub webhooks to localhost for instant CI triggers. |
 
@@ -100,13 +105,15 @@ Real learning comes from debugging. Here's what actually happened:
 | **Air gap** | EKS can't pull from localhost Nexus | Localhost doesn't exist in cloud | Pushed to Docker Hub as intermediary | Local registries need exposure |
 | **Version Hell** | Terraform Provider Conflicts | v6.0 broke v5.0 code | Pinned versions in `main.tf` | Lock your dependencies |
 | **Blindness** | App crashing silently | No logs/metrics | Installed Prometheus Stack | You can't fix what you can't see |
+| **GitOps Sync** | Argo CD confused | Manual Helm deploy conflicted | Deleted manual helm, let Argo take over | Don't mix CI-Ops and GitOps |
+| **Vulnerabilities** | Trivy blocked build | Old Tomcat version | Overrode `pom.xml` dependency version | Frameworks lag behind security patches |
 
 ---
 
 ## Project Status
 
 ```
-[███████████████░░░░░] 75% Complete
+[████████████████████] 100% Complete
 ```
 
 | Milestone | Status | Description |
@@ -121,8 +128,9 @@ Real learning comes from debugging. Here's what actually happened:
 | ✅ M9 | Complete | Infrastructure as Code (Terraform) |
 | ✅ M10 | Complete | Helm Packaging (Charts, Values, Templates) |
 | ✅ M11 | Complete | Observability (Prometheus & Grafana) |
-| 🔄 M12 | In Progress | GitOps (Argo CD) |
-| ⬜ M13-14 | Planned | Security scanning, Final Polish |
+| ✅ M12 | Complete | GitOps (Argo CD) |
+| ✅ M13 | Complete | Security Scanning (Trivy) |
+| ✅ M14 | Complete | Final Architecture Documentation |
 
 → [Full checklist in PROGRESS.md](PROGRESS.md)
 
@@ -203,14 +211,14 @@ I'm tracking these intentional shortcuts:
 
 ---
 
-## What's Next
+## What's Next (Extensions)
 
-- [x] Deploy to AWS EKS (Milestone 8)
-- [x] Terraform for VPC/EKS provisioning (Milestone 9)
-- [x] Helm Packaging (Milestone 10)
-- [x] Prometheus + Grafana monitoring (Milestone 11)
-- [ ] Argo CD for GitOps (Milestone 12)
-- [ ] Trivy security scanning (Milestone 13)
+The core bootcamp is done, but the journey never ends.
+
+- [ ] **Cost Optimization**: Use Spot Instances in Terraform.
+- [ ] **Secret Management**: Integrate HashiCorp Vault.
+- [ ] **Service Mesh**: Install Istio for mTLS and traffic splitting.
+- [ ] **Chaos Engineering**: Use LitmusChaos to break pods randomly.
 
 ---
 

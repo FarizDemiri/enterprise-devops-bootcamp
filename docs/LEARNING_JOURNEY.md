@@ -18,7 +18,12 @@ This isn't a tutorial. It's a record of how I went from "I know Docker exists" t
 | 5 | M5 | Artifact Storage | ~3 hours |
 | 6 | M6 | CI/CD Automation | ~8 hours |
 | 7 | M7 | Container Orchestration | ~4 hours |
-| 8 | — | The Full Picture | — |
+| 8 | M8-9 | Production Infrastructure (EKS + TF) | ~6 hours |
+| 9 | M10 | Packaging (Helm) | ~3 hours |
+| 10 | M11 | Observability | ~4 hours |
+| 11 | M12 | GitOps (Argo CD) | ~5 hours |
+| 12 | M13 | Security (Trivy) | ~2 hours |
+| 13 | M14 | Architecture (The Strategy) | ~2 hours |
 
 ---
 
@@ -350,4 +355,63 @@ This stack eliminates dependencies.
 
 ---
 
-*This document will grow as the project continues.*
+---
+
+## Part 10: The Autopilot
+
+**Milestone 12 | Concept: GitOps (Argo CD)**
+
+I spent weeks pushing deployments: `kubectl apply`.
+But what if I lose my laptop? What if I forget what I applied?
+
+**The Shift**: We stopped pushing. We started pulling.
+
+**How it works**:
+
+1. I commit a change to `values.yaml` (e.g., `replicaCount: 5`).
+2. Argo CD (running inside the cluster) sees the Git commit.
+3. Argo CD says "Cluster has 2, Git says 5. I must fix this."
+4. Argo CD changes the cluster state.
+
+> **Analogy**: Before, I was a gardener manually watering plants. Now, I have a **Thermostat**. I set the dial to "72 degrees" (Git), and the HVAC system (Argo CD) works constantly to reach that temperature. I don't care *how* it does it, I just trust the dial.
+
+**What broke**:
+Argo CD tried to deploy the app, but Helm had already deployed it.
+**Fix**: `helm uninstall`. Argo CD must own everything. You can't have two captains.
+
+---
+
+## Part 11: The Gatekeeper
+
+**Milestone 13 | Concept: Shift Left Security (Trivy)**
+
+I built a fast pipeline. But I almost built a fast pipeline that delivers malware.
+Trivy scanned my image and found **CRITICAL RCE Vulnerabilities** in the libraries I was using.
+
+**The realization**: "It compiles" does NOT mean "It is safe."
+
+**The Fix**:
+I had to manually override the `tomcat-embed-core` version in `pom.xml`.
+This is **DevSecOps**. Security isn't a separate team that yells at you later. It's a step in your pipeline that blocks you *now*.
+
+---
+
+## Part 12: The Architect
+
+**Milestone 14 | Concept: The Big Picture**
+
+I started this journey copying commands.
+I ended it designing systems.
+
+**What makes a Senior DevOps Engineer?**
+It's not memorizing `kubectl` commands. It's understanding:
+
+- **Coupling**: How to decouple Infrastructure (Terraform) from App (Docker).
+- **State**: Why we store state in Git (Argo CD) or S3 (Terraform), never on local disk.
+- **Feedback Loops**: Why Prometheus alerts and Trivy scans are more important than build scripts.
+
+I used to build scripts. Now I build platforms.
+
+---
+
+*This document is now complete. The journey continues in the real world.*
