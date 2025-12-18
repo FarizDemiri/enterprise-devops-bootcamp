@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: enterprise-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/FarizDemiri/enterprise-devops-bootcamp.git
+    targetRevision: main
+    path: charts/enterprise-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
