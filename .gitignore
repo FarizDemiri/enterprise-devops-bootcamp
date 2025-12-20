@@ -35,3 +35,9 @@ Thumbs.db
 .env
 *.pem
 *.key
+
+# Private Documentation (Personal/Sensitive)
+docs/SECURITY-POSTURE.md
+docs/RUNBOOK.md
+docs/INTERVIEW-PREP.md
+docs/LINKEDIN_POST.md
